@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text-Editor</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- daisyUI -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.7.2/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome Kit -->
+    <script src="https://kit.fontawesome.com/dfbc1bf2e5.js" crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+    <div class="flex flex-col justify-center items-center">
+        <div class="bg-green-300 p-8 pb-10 w-[800px] mt-4">
+            <h1 class="text-center text-7xl font-extrabold">Text Editor</h1>
+
+            <div class="flex justify-between mt-10 pb-4">
+                <div class="flex gap-5">
+                    <i id="bold" class="fa-solid fa-b"></i>
+                    <i id="italic" class="fa-solid fa-italic"></i>
+                    <i id="underline" class="fa-solid fa-underline"></i>
+                </div>
+
+                <div class="flex gap-5">
+                    <i id="text-left" class="fa-solid fa-align-left"></i>
+                    <i id="text-center" class="fa-solid fa-align-center"></i>
+                    <i id="text-right" class="fa-solid fa-align-right"></i>
+                </div>
+
+                <div class="flex justify-between items-center gap-2">
+                    <button id="btn-minus" class=""><i class="fas fa-minus"></i></button>
+                    <input id="font-size-input" type="number" class="w-[40px] text-center" value="11">
+                    <button id="btn-plus" class=""><i class="fas fa-plus"></i></button>
+                </div>
+
+                <div>
+                    <i id="text-color" class="fa-solid fa-fill"></i>
+                </div>
+
+                <select id="font-list">
+                    <option value="Arial">Arial</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Verdana">Verdana</option>
+                    <option value="Calibri">Calibri</option>
+                    <option value="Helvetica">Helvetica</option>
+                    <option value="Georgia">Georgia</option>
+                    <option value="Palatino">Palatino</option>
+                    <option value="Garamond">Garamond</option>
+                    <option value="Book Antiqua">Book Antiqua</option>
+                    <option value="Courier New">Courier New</option>
+                    <option value="Lucida Console">Lucida Console</option>
+                    <option value="Tahoma">Tahoma</option>
+                    <option value="Geneva">Geneva</option>
+                    <option value="Optima">Optima</option>
+                    <option value="Avant Garde">Avant Garde</option>
+                    <option value="Arial Narrow">Arial Narrow</option>
+                    <option value="Verdana">Verdana</option>
+                    <option value="Geneva">Geneva</option>
+                    <option value="Trebuchet MS">Trebuchet MS</option>
+                    <option value="Arial Black">Arial Black</option>
+                    <option value="Impact">Impact</option>
+                    <option value="Comic Sans MS">Comic Sans MS</option>
+                    <option value="Copperplate">Copperplate</option>
+                    <option value="Brush Script MT">Brush Script MT</option>
+                    <option value="Franklin Gothic Medium">Franklin Gothic Medium</option>
+                    <option value="Futura">Futura</option>
+                    <option value="Century Gothic">Century Gothic</option>
+                    <option value="Baskerville">Baskerville</option>
+                    <option value="Rockwell">Rockwell</option>
+                    <option value="Cambria">Cambria</option>
+                </select>
+
+            </div>
+            <textarea style="font-size: 12px;" id="text-field"
+                class="textarea textarea-bordered textarea-lg w-[750px]"></textarea>
+        </div>
+
+    </div>
+
+    <script>
+        document.getElementById('font-list').addEventListener('change', function () {
+            const selectedFont = this.value;
+            const textField = document.getElementById('text-field');
+            textField.style.fontFamily = selectedFont;
+        });
+
+        // Text Color Picker
+        document.getElementById('text-color').addEventListener('click', function () {
+            const textColorInput = document.createElement('input');
+            textColorInput.type = 'color';
+
+            textColorInput.addEventListener('change', function () {
+                const selectedColor = textColorInput.value;
+                const textField = document.getElementById('text-field');
+                textField.style.color = selectedColor;
+            });
+
+            textColorInput.click();
+        });
+
+        // font Size increase or decrease
+        document.getElementById('btn-plus').addEventListener('click', function () {
+            changeFontSize(1);
+        });
+
+        document.getElementById('btn-minus').addEventListener('click', function () {
+            changeFontSize(-1);
+        });
+
+        document.getElementById('font-size-input').addEventListener('input', function () {
+            const newFontSize = parseFloat(this.value);
+            const textField = document.getElementById('text-field');
+            const selectionStart = textField.selectionStart;
+            const selectionEnd = textField.selectionEnd;
+
+            textField.style.fontSize = newFontSize + 'px';
+
+            // Restore selection after changing font size
+            textField.setSelectionRange(selectionStart, selectionEnd);
+        });
+
+        function changeFontSize(changeAmount) {
+            const textField = document.getElementById('text-field');
+            const inputField = document.getElementById('font-size-input');
+            const currentFontSize = parseFloat(inputField.value);
+            const newFontSize = currentFontSize + changeAmount;
+            const selectionStart = textField.selectionStart;
+            const selectionEnd = textField.selectionEnd;
+
+            textField.style.fontSize = newFontSize + 'px';
+            inputField.value = newFontSize;
+
+            // Restore selection after changing font size
+            textField.setSelectionRange(selectionStart, selectionEnd);
+        }
+
+        // font bold or normal
+        document.getElementById('bold').addEventListener('click', function () {
+            const textBold = document.getElementById('text-field');
+            const currentFontWeight = window.getComputedStyle(textBold).fontWeight;
+
+            if (currentFontWeight === 'bold' || parseInt(currentFontWeight) >= 700) {
+                textBold.style.fontWeight = 'normal';
+            } else {
+                textBold.style.fontWeight = 'bold';
+            }
+        });
+
+        // Text Italic or normal
+        document.getElementById('italic').addEventListener('click', function () {
+            const textItalic = document.getElementById('text-field');
+            const currentFontStyle = window.getComputedStyle(textItalic).fontStyle;
+
+            if (currentFontStyle === 'italic') {
+                textItalic.style.fontStyle = 'normal';
+            } else {
+                textItalic.style.fontStyle = 'italic';
+            }
+        });
+
+        // Text Underline or normal
+        document.getElementById('underline').addEventListener('click', function () {
+            const textUnderline = document.getElementById('text-field');
+            const currentTextDecoration = window.getComputedStyle(textUnderline).textDecoration;
+
+            if (currentTextDecoration.includes('underline')) {
+                textUnderline.style.textDecoration = 'none';
+            } else {
+                textUnderline.style.textDecoration = 'underline';
+            }
+        });
+
+        // Text Left Align
+        document.getElementById('text-left').addEventListener('click', function () {
+            const textLeft = document.getElementById('text-field');
+            textLeft.style.textAlign = 'left';
+        })
+
+        // Text Center Align
+        document.getElementById('text-center').addEventListener('click', function () {
+            const textCenter = document.getElementById('text-field');
+            textCenter.style.textAlign = 'center';
+        })
+
+        // Text Right Align
+        document.getElementById('text-right').addEventListener('click', function () {
+            const textRight = document.getElementById('text-field');
+            textRight.style.textAlign = 'right';
+        })
+
+    </script>
+</body>
+
+</html>
